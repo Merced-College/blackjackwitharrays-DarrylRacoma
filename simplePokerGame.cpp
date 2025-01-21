@@ -38,7 +38,7 @@ void shuffleDeck() {
 int dealCard() {
     return DECK[currentCardIndex++] % 13;
 }
-//function to determine the value of the cards, this returns a true or false
+//function to determine the value of the cards, this returns a value
 int cardValue(int card) {
     return card < 9 ? card + 2 : 10;
 }
