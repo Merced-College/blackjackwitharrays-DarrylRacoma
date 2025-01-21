@@ -12,7 +12,7 @@ using namespace std;
 const string SUITS[] = {"Hearts", "Diamonds", "Clubs", "Spades"};
 const string RANKS[] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
 
-//initializing the deck array to have 0 to 52 cards in a deck
+//initializing the deck array to have 0 to 51 cards in a deck
 int DECK[52];
 int currentCardIndex = 0;
 
