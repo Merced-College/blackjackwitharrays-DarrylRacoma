@@ -47,6 +47,15 @@ int cardValue(int card) {
 int dealInitialPlayerCards() {
     int card1 = dealCard();
     int card2 = dealCard();
+    if(card1 == 12){
+        int userChoice;
+        cout << "You've drawn an Ace! Would you like set its value to be 1 or 11? ";
+        cin >> userChoice;
+        while (userChoice != 11 && userChoice != 1){
+            cout << "Invalid input please choose 1 or 11: " << endl;
+            cin >> userChoice;
+        }
+    }
     cout << "Your cards: " << RANKS[card1 % 13] << " of " << SUITS[card1 / 13] << " and " << RANKS[card2 % 13] << " of " << SUITS[card2 / 13] << endl;
     return cardValue(card1) + cardValue(card2);
 }
