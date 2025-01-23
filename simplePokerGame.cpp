@@ -47,7 +47,7 @@ int cardValue(int card) {
 int dealInitialPlayerCards() {
     int card1 = dealCard();
     int card2 = dealCard();
-    if(card1 == 12){
+    if(card1 == 12 || card2 == 12){
         int userChoice;
         cout << "You've drawn an Ace! Would you like set its value to be 1 or 11? ";
         cin >> userChoice;
