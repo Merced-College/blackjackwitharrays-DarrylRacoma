@@ -16,6 +16,11 @@ const string RANKS[] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Q
 int DECK[52];
 int currentCardIndex = 0;
 
+//int variables to track wins, losses, and draws
+int wins = 0;
+int losses = 0;
+int draws = 0;
+
 //initialize deck
 void initializeDeck() {
     for (int i = 0; i < 52; i++) {
@@ -23,7 +28,7 @@ void initializeDeck() {
     }
 }
 
-// function to shuffle the deck every time program is run
+//function to shuffle the deck every time program is run
 void shuffleDeck() {
     srand(time(0));
     for (int i = 0; i < 52; i++) {
@@ -34,40 +39,44 @@ void shuffleDeck() {
     }
 }
 
-// function to recieve card from deck
+//function to recieve card from deck
 int dealCard() {
     return DECK[currentCardIndex++] % 13;
 }
 //function to determine the value of the cards, this returns a value
 int cardValue(int card) {
+
     return card < 9 ? card + 2 : 10;
+
+    if (card < 9){
+        return card + 2;
+    }
+    else{
+        if (card == 12){
+            //return 1 or 11
+        }
+        else{
+            return 10;
+        }
+    }
 }
 
-// function to deal the first two cards for player
+//function to deal the first two cards for player
 int dealInitialPlayerCards() {
     int card1 = dealCard();
     int card2 = dealCard();
-    if(card1 == 12 || card2 == 12){
-        int userChoice;
-        cout << "You've drawn an Ace! Would you like set its value to be 1 or 11? ";
-        cin >> userChoice;
-        while (userChoice != 11 && userChoice != 1){
-            cout << "Invalid input please choose 1 or 11: " << endl;
-            cin >> userChoice;
-        }
-    }
     cout << "Your cards: " << RANKS[card1 % 13] << " of " << SUITS[card1 / 13] << " and " << RANKS[card2 % 13] << " of " << SUITS[card2 / 13] << endl;
     return cardValue(card1) + cardValue(card2);
 }
 
-// function to produce dealer's first card
+//function to produce dealer's first card
 int dealInitialDealerCards() {
     int card1 = dealCard();
     cout << "Dealer's card: " << RANKS[card1 % 13] << " of " << SUITS[card1 / 13] << endl;
     return cardValue(card1);
 }
 
-// function to add total amount of points from cards obtained
+//function to add total amount of points from cards obtained
 int playerTurn(int playerTotal) {
     while (true) {
         cout << "Your total is " << playerTotal << ". Do you want to hit or stand?" << endl;
@@ -77,7 +86,7 @@ int playerTurn(int playerTotal) {
             int newCard = dealCard();
             playerTotal += cardValue(newCard);
             cout << "You drew a " << RANKS[newCard % 13] << " of " << SUITS[newCard / 13] << endl;
-            if (playerTotal > 21) {
+            if (playerTotal >= 21) {
                 break;
             }
         } else if (action == "stand") {
@@ -102,27 +111,47 @@ int dealerTurn(int dealerTotal) {
 void determineWinner(int playerTotal, int dealerTotal) {
     if (dealerTotal > 21 || playerTotal > dealerTotal) {
         cout << "You win!" << endl;
+        wins++;
     } else if (dealerTotal == playerTotal) {
         cout << "It's a tie!" << endl;
+        draws++;
     } else {
         cout << "Dealer wins!" << endl;
+        losses++;
     }
 }
 
 int main() {
-    initializeDeck();
-    shuffleDeck();
+    
+    string continueGame = "yes";
+    while (continueGame != "no"){
+        initializeDeck();
+        shuffleDeck();
   
-    int playerTotal = dealInitialPlayerCards();
-    int dealerTotal = dealInitialDealerCards();
+        int playerTotal = dealInitialPlayerCards();
+        int dealerTotal = dealInitialDealerCards();
   
-    playerTotal = playerTurn(playerTotal);
-    if (playerTotal > 21) {
-      cout << "You busted! Dealer wins." << endl;
-      return 0;
+        playerTotal = playerTurn(playerTotal);
+        if (playerTotal > 21) {
+        cout << "You busted! Dealer wins." << endl;
+        }
+        dealerTotal = dealerTurn(dealerTotal);
+        determineWinner(playerTotal, dealerTotal);
+
+        //Asks user if they'd like to continue playing, modifies continueGame variable to check if game should be repeated
+        cout << "Would you like to continue playing?" << endl;
+        //cin >> continueGame;
+        getline(cin, continueGame);
+        while (continueGame != "yes" && continueGame != "no"){
+             cout << "Please enter a valid input. (yes/no)" << endl;
+             //cin >> continueGame;
+             getline(cin, continueGame);
+
+        }
     }
-    dealerTotal = dealerTurn(dealerTotal);
-    determineWinner(playerTotal, dealerTotal);
-  
+    
+    //Print out final stats
+    cout << "Here are your final stats. You had: " << endl << endl;
+    cout << wins << " win(s), " << losses << " loss(es), " << "and " << draws << " draw(s)!" << endl;
     return 0;
 }
